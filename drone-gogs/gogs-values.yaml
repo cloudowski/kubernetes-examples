@@ -1,0 +1,52 @@
+## Kubernetes configuration
+## For minikube, set this to NodePort, elsewhere use LoadBalancer
+##
+serviceType: NodePort
+
+replicaCount: 1
+
+service:
+  gogs:
+    serverDomain: git.app.labs.k8sworkshops.com
+    serverRootUrl: http://git.app.labs.k8sworkshops.com/
+    ## Either "mysql", "postgres" or "sqlite3", you can connect to TiDB with
+    ## MySQL protocol.  Default is to use the postgresql configuration included
+    ## with this chart.
+    ##
+    databaseType: sqlite3
+    logLevel: Trace
+    securitySecretKey: "wfaw43rfouehfd9u3sdcsc@"
+    repositoryUploadMaxFileSize: 10
+
+  ingress:
+    enabled: true
+    hosts:
+      - git.app.labs.k8sworkshops.com
+    annotations:
+      #ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.org/client-max-body-size: "10m"
+      ingress.kubernetes.io/proxy-body-size: "100m"
+      nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+
+persistence:
+  enabled: true
+
+  ## gogs data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+
+  ## Persistent Volume Access Mode.
+  ##
+  accessMode: ReadWriteOnce
+
+  ## Persistent Volume Storage Size.
+  ##
+  size: 1Gi
+
+postgresql:
+    install: false

@@ -1,0 +1,28 @@
+image:
+  repository: docker.io/rocketchat/rocket.chat
+  tag: 1.2.3
+  pullPolicy: IfNotPresent
+
+## Host for the application
+##
+# host:
+
+replicaCount: 1
+minAvailable: 1
+
+mongodb:
+  enabled: true
+  mongodbUsername: rocketchat
+  mongodbDatabase: rocketchat
+  mongodbPassword: rocketchat
+  mongodbRootPassword: RocketChat123
+
+  persistence:
+    size: 1Gi
+
+persistence:
+  enabled: true
+  size: 1Gi
+
+ingress:
+  enabled: true

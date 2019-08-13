@@ -1,0 +1,141 @@
+service:
+  httpPort: 80
+
+  ## If service.type is not set to NodePort, the following statement
+  ## will be ignored.
+  ##
+  nodePort: 32015
+
+  ## Service type can be set to ClusterIP, NodePort or LoadBalancer.
+  ##
+  type: NodePort
+
+ingress:
+  ## If true, Drone Ingress will be created.
+  ##
+  enabled: true
+
+  hosts:
+     - drone.domain.io
+
+sourceControl:
+  ## your source control provider: github,gitlab,gitea,gogs,bitbucketCloud,bitbucketServer
+  provider:
+  ## secret containing your source control provider secrets, keys provided below.
+  ## if left blank will assume a secret based on the release name of the chart.
+  secret:
+  ## Fill in the correct values for your chosen source control provider
+  ## Any key in this list with the suffix `Key` will be fetched from the
+  ## secret named above, if not provided the secret it will be created as
+  ## `<fullName>-source-control` using for the key "ClientSecretKey" and
+  # "clientSecretValue" for the value. Be awere to not leak shis file with your password
+  github:
+    clientID:
+    clientSecretKey: clientSecret
+    clientSecretValue:
+    server: https://github.com
+  gitlab:
+    clientID:
+    clientSecretKey: clientSecret
+    clientSecretValue:
+    server:
+  gitea:
+    server:
+  gogs:
+    server:
+  bitbucketCloud:
+    clientID:
+    clientSecretKey: clientSecret
+    clientSecretValue:
+  bitbucketServer:
+    server:
+    consumerKey: consumerKey
+    privateKey: privateKey
+    username:
+    passwordKey: password
+
+server:
+  host: "drone.domain.io"
+
+  ## protocol should be http or https
+  protocol: http
+
+  ## rpcProtocol for rpc connection to the server should be http or https
+  rpcProtocol: http
+
+  ## Initial admin user
+  ## Leaving this blank may make it impossible to log into drone.
+  ## Set to a valid oauth user from your git/oauth server
+  ## For more complex user creation you can use env variables below instead.
+  adminUser: admin
+
+  ## Configures Drone to authenticate when cloning public repositories. This is only required
+  ## when your source code management system (e.g. GitHub Enterprise) has private mode enabled.
+  alwaysAuth: false
+
+  ## Configures drone to use kubernetes to run pipelines rather than agents, if enabled
+  ## will not deploy any agents.
+  kubernetes:
+    ## set to true if you want drone to use kubernetes to run pipelines
+    enabled: true
+    ## you can run pipeline jobs in another namespace, if you choose to do this
+    ## you'll need to create that namespace manually.
+    # namespace:
+
+    ## alternative service account to create to create drone pipelines. this account
+    ## will be given cluster-admin rights.
+    ## if not set the rights will be given to the default drone service account name.
+    # pipelineServiceAccount:
+
+  ## Drone server configuration.
+  ## Values in here get injected as environment variables.
+  ## You can set up remote database servers etc using environment
+  ## variables.
+  ## ref: https://docs.drone.io/reference/server/
+  ##
+  env:
+    DRONE_LOGS_DEBUG: "false"
+    DRONE_DATABASE_DRIVER: "sqlite3"
+    DRONE_DATABASE_DATASOURCE: "/var/lib/drone/drone.sqlite"
+
+  ## Secret environment variables are configured in `server.envSecrets`.
+  ## Each item in `server.envSecrets` references a Kubernetes Secret.
+  ## These Secrets should be created before they are referenced.
+  ##
+  # envSecrets:
+  #   # The name of a Kubernetes Secret
+  #   drone-server-secrets:
+  #     # A list of Secret keys to include as environment variables
+  #     - DRONE_GITHUB_SECRET
+
+  ## Additional server annotations.
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  annotations: {}
+
+  ## CPU and memory limits for drone server
+  ##
+  resources: {}
+  #  requests:
+  #    memory: 32Mi
+  #    cpu: 40m
+  #  limits:
+  #    memory: 2Gi
+  #    cpu: 1
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+## Uncomment this if you want to set a specific shared secret between
+## the agents and servers, otherwise this will be auto-generated.
+##
+# sharedSecret: supersecret
+
+serviceAccount:
+  ## Specifies whether a ServiceAccount should be created
+  create: true
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the fullname template
+  name: drone

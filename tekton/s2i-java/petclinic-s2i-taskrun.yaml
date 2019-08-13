@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: s2i-java11-taskrun
+spec:
+  # Use service account with git and image repo credentials
+  serviceAccount: s2i-pipeline
+  taskRef:
+    name: s2i-java-11
+  inputs:
+    resources:
+    - name: source
+      resourceSpec:
+        type: git
+        params:
+        - name: url
+          value: https://github.com/spring-projects/spring-petclinic.git
+  outputs:
+    resources:
+    - name: image
+      resourceSpec:
+        type: image
+        params:
+        - name: url
+          value: cloudowski/petclinic
