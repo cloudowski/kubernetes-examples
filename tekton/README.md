@@ -28,3 +28,9 @@ kubectl create rolebinding tekton-s2i --serviceaccount=default:s2i-pipeline --cl
 kubectl apply -f s2i-java/petclinic-s2i-java8-taskrun.yaml
 tkn taskrun logs -f s2i-java8-taskrun
 ```
+
+# Dashboard
+
+```
+kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.1.0/release.yaml
+```
