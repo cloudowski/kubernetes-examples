@@ -1,0 +1,33 @@
+alertmanager:
+
+  ingress:
+    enabled: true
+
+    annotations: {}
+    ##
+    hosts: []
+      # - alertmanager.domain.com
+
+    tls: []
+    # - secretName: alertmanager-general-tls
+    #   hosts:
+    #   - alertmanager.example.com
+
+grafana:
+  enabled: true
+  adminPassword: admin
+
+  ingress:
+    enabled: true
+    annotations: {}
+    tls: []
+
+prometheus:
+
+  ingress:
+    enabled: true
+    annotations: {}
+    tls: []
+      # - secretName: prometheus-general-tls
+      #   hosts:
+      #     - prometheus.example.com

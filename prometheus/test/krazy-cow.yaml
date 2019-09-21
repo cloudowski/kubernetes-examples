@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cow
+  name: cow
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cow
+  template:
+    metadata:
+      labels:
+        app: cow
+    spec:
+      containers:
+      - image: cloudowski/krazy-cow:0.3
+        name: krazy-cow
+        ports:
+        - containerPort: 8080
+          name: http
+        env: 
+        - name: KC_COW_INITMOOD
+          value: "5"
+        - name: KC_COW_MOODCHANGER_CHANGE
+          value: "1"
+        - name: KC_COW_MOODCHANGER_ENABLED
+          value: "true"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cow
+  labels:
+    app: cow
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: http
+    name: http
+  selector:
+      app: cow
