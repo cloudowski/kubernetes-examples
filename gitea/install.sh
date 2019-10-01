@@ -8,9 +8,16 @@ DNSDOMAIN="$(minikube ip).nip.io"
 # fix database path
 sed -i "" -e 's|= data/gitea.db|= /data/gitea.db|' $CHARTDIR/templates/gitea/gitea-config.yaml
 
+# Kubernetes
 helm install --values gitea-values.yaml --name gitea \
     --set service.http.externalHost=gitea.${DNSDOMAIN} \
     $CHARTDIR
+
+# OpenShift version
+oc adm policy add-scc-to-user anyuid -z default
+helm template --values gitea-values.yaml --name gitea \
+    --set service.http.externalHost=gitea.${DNSDOMAIN} \
+    $CHARTDIR | oc apply -f-
 
 echo http://gitea.${DNSDOMAIN}
 
