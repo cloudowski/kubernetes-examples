@@ -1,0 +1,40 @@
+keycloak:
+  replicas: 1
+
+  ## Username for the initial Keycloak admin user
+  username: keycloak
+  password: "keycloak"
+
+  existingSecret: ""
+  # The key in the existing secret that stores the password
+  existingSecretKey: password
+
+  tolerations: 
+   - key: "node-role.kubernetes.io/master"
+     operator: "Exists"
+     effect: "NoSchedule"
+
+
+  ingress:
+    enabled: true
+    path: /
+
+    annotations: 
+      ingress.kubernetes.io/ssl-redirect: "true"
+      kubernetes.io/tls-acme: "true"
+      certmanager.k8s.io/issuer: letsencrypt-prod
+      nginx.org/client-max-body-size: "0"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+    hosts:
+      - keycloak.example.com
+
+#    tls: 
+#    - hosts:
+#        - keycloak.example.com
+#      secretName: keycloak-letsencrypt-prod
+
+  persistence:
+    dbVendor: h2
+
