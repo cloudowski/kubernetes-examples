@@ -42,7 +42,7 @@ service:
   http:
     serviceType: NodePort
     port: 3000
-    nodePort: 30280
+    nodePort: 30288
     # sometimes if is necesary to access through an external port i.e. http(s)://<dns-name>:<external-port>
     externalPort: 80
     externalHost: git.example.com

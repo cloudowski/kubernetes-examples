@@ -12,7 +12,7 @@ kubectl apply -f casc/ -n jenkins
 JENKINS_HOST=jenkins.$(minikube ip).nip.io
 
 helm install --namespace jenkins -n jenkins stable/jenkins -f jenkins-values.yaml \
-    --set master.ingress.hostName=$JENKINS_HOST
+    --set master.ingress.hostName=$JENKINS_HOST --version 1.6.0
 
 
 sleep 20
