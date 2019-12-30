@@ -32,5 +32,9 @@ tkn taskrun logs -f s2i-java8-taskrun
 # Dashboard
 
 ```
-kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.1.0/release.yaml
+kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.2.1/dashboard-latest-release.yaml
+
+kubectl --namespace tekton-pipelines port-forward svc/tekton-dashboard 9097:9097
 ```
+
+Open [http://localhost:9097](http://localhost:9097) to see the dashboard.

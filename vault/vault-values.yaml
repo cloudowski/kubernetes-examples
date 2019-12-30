@@ -7,7 +7,7 @@ server:
       - /
 
   authDelegator:
-    enabled: false
+    enabled: true
 
   dataStorage:
     enabled: true
