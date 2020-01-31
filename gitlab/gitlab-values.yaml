@@ -3,32 +3,41 @@ global:
   ingress:
     configureCertmanager: false
     class: "nginx"
+    annotations:
+       "kubernetes.io/tls-acme": true
+       "cert-manager.io/cluster-issuer": letsencrypt-prod
   hosts:
-    domain: 192.168.99.100.nip.io
-#    externalIP: 192.168.99.100
-# Don't use certmanager, we'll self-sign
+    domain: test2.k8sworkshops.com
+  minio:
+    enabled: true
+  registry:
+    enabled: false
 certmanager:
   install: false
-# Use the `ingress` addon, not our Ingress (can't map 22/80/443)
+certmanager-issuer:
+  email: tomasz+letsencrypt@cloudowski.com
 nginx-ingress:
   enabled: false
-# Save resources, only 2 CPU
 prometheus:
   install: false
-# GitLab Runner isn't a big fan of self-signed certificates
 gitlab-runner:
-  install: false
-# Reduce replica counts, reducing CPU & memory requirements  
+  install: true
 gitlab:
-  unicorn:
-    minReplicas: 1
-    maxReplicas: 1
   sidekiq:
     minReplicas: 1
     maxReplicas: 1
   gitlab-shell:
     minReplicas: 1
     maxReplicas: 1
-#registry:
-# minReplicas: 1
-# maxReplicas: 1
+  webservice:
+    ingress:
+      tls:
+        secretName: gitlab-gitlab-tls
+minio:
+  ingress:
+    tls:
+      secretName: gitlab-minio-tls
+registry:
+  ingress:
+    tls:
+      secretName: gitlab-registry-tls

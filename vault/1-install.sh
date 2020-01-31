@@ -13,21 +13,23 @@ echo http://vault.${DNSDOMAIN}
 
 
 cat << EOF
-====================
+##################
 
-To start using you need to initialize vault instance first - execute the following commands from vault-0 pod
+# To start using you need to initialize vault instance first - execute the following commands from vault-0 pod
+
+kubectl exec -ti vault-0 sh
 
 vault operator init
 
-DON'T FORGET to Write down somewhere the generated root token!
+# DON'T FORGET to Write down somewhere the generated root token!
 
-Use 3 of 5 generated unseal keys to unseal the vault:
+# Use 3 of 5 generated unseal keys to unseal the vault:
 
 vault operator unseal
 vault operator unseal
 vault operator unseal
 
-Then from your workstation set the following vairables to operate vault:
+# Then from your workstation set the following vairables to operate vault:
 
 export VAULT_ADDR=http://vault.${DNSDOMAIN}
 export VAULT_TOKEN=<ROOT_TOKEN_GENERATED_DURING_INIT>
