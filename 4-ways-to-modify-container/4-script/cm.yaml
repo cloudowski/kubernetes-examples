@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scripts
+data:
+  prestart-script.sh: |-
+    #!/usr/bin/env bash
+
+    echo '<h2>Page prepared by a script executed before entrypoint container</h2>' > /usr/share/nginx/html/index.html
+
+    exec /docker-entrypoint.sh nginx -g "daemon off;"

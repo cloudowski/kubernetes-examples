@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx-init
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      initContainers:
+        - name: prepare-webpage
+          image: busybox:1.28
+          command: ["sh", "-c"]
+          args: [
+              "set -x;
+              echo '<h2><marquee>Page prepared by an init container</marquee></h2>' > /web/index.html;
+              echo 'Init finished successfully'
+              ",
+            ]
+          volumeMounts:
+            - mountPath: /web
+              name: web
+      containers:
+        - image: nginx:1.19
+          name: nginx
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/
+              name: web
+          ports:
+            - containerPort: 80
+              name: http
+      volumes:
+        - name: web
+          emptyDir: {}

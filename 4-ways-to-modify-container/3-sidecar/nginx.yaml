@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx-sidecar
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: nginx:1.19
+          name: nginx
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/
+              name: web
+          ports:
+            - containerPort: 80
+              name: http
+        - name: prepare-webpage
+          image: busybox:1.28
+          command: ["sh", "-c"]
+          args: [
+              "set -x;
+              echo '<h2>Page prepared by a sidecar container</h2>' > /web/index.html;
+              while :;do sleep 9999;done
+              ",
+            ]
+          volumeMounts:
+            - mountPath: /web
+              name: web
+      volumes:
+        - name: web
+          emptyDir: {}
